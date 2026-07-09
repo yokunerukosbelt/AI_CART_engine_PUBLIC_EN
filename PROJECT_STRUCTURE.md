@@ -252,11 +252,11 @@ students/results/
 
 ## Documentation
 
-- `README.md` / `README.en.md` - short project index
-- `STUDENT_GUIDE.md` / `STUDENT_GUIDE.en.md` - student procedures
-- `AGENT_INTERFACE.md` / `AGENT_INTERFACE.en.md` - exact student agent interface against the engine
-- `students/README.md` / `students/README.en.md` - short guide directly in the student workspace
-- `PROJECT_STRUCTURE.md` / `PROJECT_STRUCTURE.en.md` - technical project map
+- `README.md` / `README.md` - short project index
+- `STUDENT_GUIDE.md` / `STUDENT_GUIDE.md` - student procedures
+- `AGENT_INTERFACE.md` / `AGENT_INTERFACE.md` - exact student agent interface against the engine
+- `students/README.md` / `students/README.md` - short guide directly in the student workspace
+- `PROJECT_STRUCTURE.md` / `PROJECT_STRUCTURE.md` - technical project map
 
 ## Typing
 
