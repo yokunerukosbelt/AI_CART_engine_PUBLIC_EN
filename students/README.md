@@ -1,41 +1,41 @@
 # Students workspace
 
-Tato složka je určená pro studentské agenty, savy, mapy a benchmark výstupy. Engine je mimo tuto složku.
+This folder is intended for student agents, saves, maps, and benchmark outputs. The engine lives outside this folder.
 
-Podrobný studentský návod je v `../STUDENT_GUIDE.md`. Přesný kontrakt agenta je v `../AGENT_INTERFACE.md`.
+The detailed student guide is in `../STUDENT_GUIDE.en.md`. The exact agent contract is in `../AGENT_INTERFACE.en.md`.
 
 ```text
 students/
-├── agents/                 # AIbrain_<NazevTymu>.py
-├── saves/                  # AIbrain_<NazevTymu>.npz
-├── maps/                   # vlastní .csv mapy
-├── results/                # benchmarky, logy tréninku a grafy
-├── benchmark_agents.yaml   # seznam agentů pro benchmark
+├── agents/                 # AIbrain_<TeamName>.py
+├── saves/                  # AIbrain_<TeamName>.npz
+├── maps/                   # custom .csv maps
+├── results/                # benchmarks, training logs, and plots
+├── benchmark_agents.yaml   # list of agents for benchmark runs
 └── README.md
 ```
 
 ## Agent
 
-Soubor i třída musí mít stejné jméno:
+The file and the class must have the same name:
 
 ```text
-students/agents/AIbrain_MujTeam.py
-class AIbrain_MujTeam
+students/agents/AIbrain_MyTeam.py
+class AIbrain_MyTeam
 ```
 
-Jako vzor použijte:
+Use this as the reference example:
 
 ```text
 AI_engines/AIbrain_linear.py
 ```
 
-Přesný kontrakt rozhraní agenta je v:
+The exact agent interface contract is in:
 
 ```text
-../AGENT_INTERFACE.md
+../AGENT_INTERFACE.en.md
 ```
 
-Agent musí implementovat metody:
+The agent must implement these methods:
 
 - `decide`
 - `mutate`
@@ -48,87 +48,87 @@ Agent musí implementovat metody:
 
 ## Save
 
-Trénink ukládá `.npz` soubory do:
+Training saves `.npz` files into:
 
 ```text
 students/saves/
 ```
 
-Doporučený název:
+Recommended name:
 
 ```text
-AIbrain_<NazevTymu>.npz
+AIbrain_<TeamName>.npz
 ```
 
-Při načítání můžete zadat název s `.npz` i bez `.npz`.
+When loading, you can enter the name with or without `.npz`.
 
-V tréninku musí být `cars_to_next` mezi `1` a `pocet_aut`. Pokud zadáte hodnotu mimo rozsah, engine ji upraví na bezpečnou hodnotu a vypíše varování. `SAVE` před spuštěním nebo načtením tréninku jen vypíše hlášku, protože zatím není co uložit.
+During training, `cars_to_next` must be between `1` and `pocet_aut`. If you enter a value outside the allowed range, the engine clamps it to a safe value and prints a warning. `SAVE` before starting or loading a training run only prints a message, because there is nothing to save yet.
 
-Tlačítko `RELOAD SET` během běžícího tréninku přebere nové hodnoty `pocet_aut`, `cars_to_next`, `save_as`, `load_from` a `max_time` a vytvoří další generaci stejnou logikou jako `NEXT GEN`. Save ze souboru tím nenačítá.
+The `RELOAD SET` button during a running training session takes new values for `pocet_aut`, `cars_to_next`, `save_as`, `load_from`, and `max_time`, then creates the next generation using the same logic as `NEXT GEN`. It does not load a save from a file.
 
-## Logy tréninku
+## Training logs
 
-Trénink po každé dokončené generaci automaticky zapisuje CSV řádek do:
+After each completed generation, training automatically writes one CSV row into:
 
 ```text
 students/results/training_logs/
 ```
 
-Pokud je dostupný `matplotlib`, průběžný PNG graf se ukládá do:
+If `matplotlib` is available, a live PNG plot is saved into:
 
 ```text
 students/results/training_plots/
 ```
 
-CSV funguje vždy samostatně. Když `matplotlib` chybí, trénink pokračuje bez grafu.
+CSV logging works on its own. If `matplotlib` is missing, training continues without plots.
 
-## Mapy
+## Maps
 
-Vlastní mapy ukládejte přes editor do:
+Save custom maps from the editor into:
 
 ```text
-students/maps/<nazev>.csv
+students/maps/<name>.csv
 ```
 
-V menu pak stačí zadat jen `<nazev>`.
+In the menu, you can then enter only `<name>`.
 
 ## Benchmark
 
-Seznam agentů pro benchmark je v:
+The list of agents for benchmarks is in:
 
 ```text
 students/benchmark_agents.yaml
 ```
 
-Formát:
+Format:
 
 ```yaml
 agents:
-  - agent: AIbrain_MujTeam
-    save: AIbrain_MujTeam.npz
+  - agent: AIbrain_MyTeam
+    save: AIbrain_MyTeam.npz
 ```
 
-Výsledky benchmarku se ukládají do:
+Benchmark results are saved into:
 
 ```text
 students/results/
 ```
 
-V běžícím benchmarku je vlevo na mapě bílý seznam `#pořadí název_mozku`. Stejné pořadové číslo je výrazně žlutě s tmavým obrysem vykreslené přímo přes auto a ve výsledkovém CSV jako `benchmark_order`.
+During a running benchmark, the left side of the map shows a white list in the form `#order brain_name`. The same order number is drawn in bright yellow with a dark outline directly over the car and stored in the result CSV as `benchmark_order`.
 
-Výsledný `rank` zvýhodňuje skutečné dojetí do cíle: dojetá auta se řadí podle času, nedojetá auta jsou až za nimi podle stavu `TIMEOUT`, `CRASH`, `OUT`. `distance_tiles` je pouze doplňková informace.
+The final `rank` favors actually reaching the finish: finished cars are sorted by time, and unfinished cars are placed after them by status `TIMEOUT`, `CRASH`, `OUT`. `distance_tiles` is only an additional informational metric.
 
-## Odevzdání
+## Submission
 
-Typicky odevzdáváte:
+You typically submit:
 
 ```text
-students/agents/AIbrain_<NazevTymu>.py
-students/saves/AIbrain_<NazevTymu>.npz
+students/agents/AIbrain_<TeamName>.py
+students/saves/AIbrain_<TeamName>.npz
 ```
 
-Neměňte soubory enginu mimo `students/`, pokud k tomu není výslovné zadání.
+Do not modify engine files outside `students/` unless that is explicitly assigned.
 
-## Poznámka k typování
+## Typing note
 
-Engine má typový protokol `AgentProtocol`, který popisuje povinné metody agenta. Pro vás je pořád nejdůležitější zachovat stejné metody jako v `AI_engines/AIbrain_linear.py`; typování jen pomáhá editoru a kontrole enginu. Studentské agenty mohou anotace používat, ale nejsou kvůli výuce striktně vynucené.
+The engine has the `AgentProtocol` type protocol, which describes the required agent methods. For you, the most important thing is still to keep the same methods as in `AI_engines/AIbrain_linear.py`; typing only helps the editor and engine checks. Student agents may use annotations, but they are not strictly enforced for teaching purposes.

@@ -1,14 +1,14 @@
-# AI Cart V2 - návod pro studenty
+# AI Cart V2 - Student Guide
 
-AI Cart V2 je jednoduchý Pygame závodní engine pro evoluční trénování AI agentů. Student píše vlastní "mozek" auta, trénuje ho na mapě, uloží parametry do `.npz` souboru a potom se agent může porovnávat v duelu nebo benchmarku.
+AI Cart V2 is a simple Pygame racing engine for evolutionary training of AI agents. A student writes their own car "brain", trains it on a map, saves the parameters into an `.npz` file, and then the agent can be compared in a duel or benchmark.
 
-Engine a studentská práce jsou oddělené. Studenti běžně pracují jen ve složce `students/`.
+The engine and student work are separated. Students normally work only inside the `students/` folder.
 
-Hlavní rozcestník projektu je v `README.md`. Přesný kontrakt rozhraní agenta je v `AGENT_INTERFACE.md`.
+The main project index is in `README.en.md`. The exact agent interface contract is in `AGENT_INTERFACE.en.md`.
 
-## Rychlý start
+## Quick start
 
-Spouštějte projekt z kořene `AI_Cart_engine_V2/`.
+Run the project from the `AI_Cart_engine_V2/` root directory.
 
 ```bash
 python3 -m venv .venv
@@ -17,43 +17,43 @@ pip install pygame numpy
 python main.py
 ```
 
-Na Windows použijte aktivaci virtuálního prostředí podle svého terminálu, například `.venv\Scripts\activate`.
+On Windows, use the virtual environment activation command for your terminal, for example `.venv\Scripts\activate`.
 
-## Co odevzdává tým
+## What a team submits
 
-Každý tým odevzdává hlavně tyto dva soubory:
+Each team mainly submits these two files:
 
 ```text
-students/agents/AIbrain_<NazevTymu>.py
-students/saves/AIbrain_<NazevTymu>.npz
+students/agents/AIbrain_<TeamName>.py
+students/saves/AIbrain_<TeamName>.npz
 ```
 
-První soubor je zdrojový kód agenta. Druhý soubor jsou natrénované parametry uložené z tréninku.
+The first file is the agent source code. The second file contains trained parameters saved from training.
 
-Příklad:
+Example:
 
 ```text
 students/agents/AIbrain_SAFR.py
 students/saves/AIbrain_SAFR.npz
 ```
 
-Soubor agenta a třída uvnitř musí mít stejné jméno:
+The agent file and the class inside it must have the same name:
 
 ```python
 class AIbrain_SAFR:
     ...
 ```
 
-## Co studenti smí měnit
+## What students may change
 
-Studenti mohou přidávat a upravovat:
+Students may add and edit:
 
-- `students/agents/AIbrain_<NazevTymu>.py`
+- `students/agents/AIbrain_<TeamName>.py`
 - `students/saves/*.npz`
 - `students/maps/*.csv`
-- případně `students/benchmark_agents.yaml`, pokud připravují vlastní benchmark
+- optionally `students/benchmark_agents.yaml`, if they are preparing their own benchmark
 
-Studenti by neměli měnit engine:
+Students should not modify the engine:
 
 - `core/`
 - `scenes/`
@@ -63,54 +63,54 @@ Studenti by neměli měnit engine:
 - `constants.py`
 - `AI_engines/`
 
-`AI_engines/` slouží jako vestavěné ukázky a šablony, ne jako místo pro studentské odevzdání.
+`AI_engines/` contains built-in examples and templates. It is not the place for student submissions.
 
-## Struktura studentské práce
+## Student work structure
 
 ```text
 students/
-├── agents/      # Python soubory agentů
-├── saves/       # uložené .npz parametry
-├── maps/        # vlastní .csv mapy
-├── results/     # benchmarky, logy tréninku a grafy
+├── agents/      # Python agent files
+├── saves/       # saved .npz parameters
+├── maps/        # custom .csv maps
+├── results/     # benchmarks, training logs, and plots
 └── benchmark_agents.yaml
 ```
 
-Agenti se načítají automaticky ze dvou míst:
+Agents are loaded automatically from two locations:
 
 1. `students/agents/`
 2. `AI_engines/`
 
-Pokud existuje agent se stejným názvem v obou složkách, přednost má verze ve `students/agents/`.
+If an agent with the same name exists in both folders, the version in `students/agents/` has priority.
 
-Výchozí agent po spuštění je `AIbrain_linear`.
+The default agent after startup is `AIbrain_linear`.
 
-## Jak má vypadat agent
+## What an agent should look like
 
-Agent je Python třída, kterou auto používá pro rozhodování. Vstupem do rozhodování jsou vzdálenosti paprsků od překážek. Výstupem jsou čtyři hodnoty:
+An agent is a Python class used by the car for decisions. The decision input is a list of ray distances from obstacles. The output has four values:
 
 ```text
-index 0 - plyn
-index 1 - brzda
-index 2 - doleva
-index 3 - doprava
+index 0 - throttle
+index 1 - brake
+index 2 - left
+index 3 - right
 ```
 
-Auto bere akci jako aktivní, pokud je hodnota větší než `0.5`.
+The car treats an action as active if the value is greater than `0.5`.
 
-Agent musí mít stejné rozhraní jako ukázkové agenty. Nejlepší výchozí vzor je:
+The agent must have the same interface as the example agents. The best starting reference is:
 
 ```text
 AI_engines/AIbrain_linear.py
 ```
 
-Přesný kontrakt mezi enginem a agentem je v:
+The exact contract between the engine and the agent is in:
 
 ```text
-AGENT_INTERFACE.md
+AGENT_INTERFACE.en.md
 ```
 
-Povinné metody:
+Required methods:
 
 - `__init__(self)`
 - `decide(self, data)`
@@ -122,222 +122,222 @@ Povinné metody:
 - `passcardata(self, x, y, speed)`
 - `getscore(self)`
 
-Praktické minimum:
+Practical minimum:
 
-- v `__init__` inicializujte parametry, `self.score` a `self.NAME`
-- v `decide` vraťte 4 čísla pro ovládání auta
-- v `mutate` náhodně upravte parametry
-- ve `store` uložte parametry do `self.parameters`
-- v `set_parameters` obnovte stav ze savu
-- v `calculate_score` nastavujte fitness do `self.score`
+- in `__init__`, initialize parameters, `self.score`, and `self.NAME`
+- in `decide`, return 4 numbers for controlling the car
+- in `mutate`, randomly modify parameters
+- in `store`, store parameters into `self.parameters`
+- in `set_parameters`, restore state from a save
+- in `calculate_score`, set fitness into `self.score`
 
-## Hlavní menu
+## Main menu
 
-Po spuštění `python main.py` se otevře hlavní menu:
+After running `python main.py`, the main menu opens:
 
-- `Hraj` - ruční jízda jedním autem
-- `Mapa` - editor map
-- `Trénuj` - evoluční trénink vybraného agenta
-- `Souboj` - duel dvou agentů
-- `Benchmark` - hromadné porovnání více agentů
-- `Konec` - ukončení aplikace
+- `Hraj` - manual driving with one car
+- `Mapa` - map editor
+- `Trénuj` - evolutionary training of the selected agent
+- `Souboj` - duel between two agents
+- `Benchmark` - batch comparison of multiple agents
+- `Konec` - exit the application
 
-Ovládání:
+Controls:
 
-- šipky nahoru/dolů - výběr položky
-- Enter - potvrzení
-- Esc - návrat nebo ukončení
+- up/down arrows - select item
+- Enter - confirm
+- Esc - go back or exit
 
-Ve spodní části menu jsou dvě textová pole:
+At the bottom of the menu there are two text fields:
 
-- `agent_name` - název agenta, například `AIbrain_SAFR`
-- mapa - název mapy, například `DefaultRace`, `DefaultReset` nebo název ze `students/maps/`
+- `agent_name` - agent name, for example `AIbrain_SAFR`
+- map - map name, for example `DefaultRace`, `DefaultReset`, or a name from `students/maps/`
 
-Názvy map se zadávají bez cesty. Přípona `.csv` je volitelná.
+Map names are entered without a path. The `.csv` suffix is optional.
 
-## Trénink agenta
+## Training an agent
 
-Postup:
+Procedure:
 
-1. Vložte soubor agenta do `students/agents/`.
-2. Spusťte `python main.py`.
-3. V menu do `agent_name` napište název agenta, například `AIbrain_SAFR`.
-4. Do pole mapy napište například `DefaultRace`.
-5. Vyberte `Trénuj`.
-6. Nastavte parametry tréninku.
-7. Stiskněte `START`.
+1. Put the agent file into `students/agents/`.
+2. Run `python main.py`.
+3. In the menu, enter the agent name into `agent_name`, for example `AIbrain_SAFR`.
+4. In the map field, enter for example `DefaultRace`.
+5. Select `Trénuj`.
+6. Set the training parameters.
+7. Press `START`.
 
-Pole v tréninku:
+Fields in training:
 
-- `pocet_aut` - počet aut v jedné generaci
-- `pocet_generaci` - počet generací
-- `cars_to_next` - kolik nejlepších aut se použije pro další generaci; musí být mezi `1` a `pocet_aut`
-- `save_as` - název savu pro nejlepšího agenta
-- `max_time` - maximální délka jedné generace v sekundách
-- `load_from` - save, ze kterého se má pokračovat
+- `pocet_aut` - number of cars in one generation
+- `pocet_generaci` - number of generations
+- `cars_to_next` - how many of the best cars are used for the next generation; must be between `1` and `pocet_aut`
+- `save_as` - save name for the best agent
+- `max_time` - maximum length of one generation in seconds
+- `load_from` - save to continue from
 
-Tlačítka:
+Buttons:
 
-- `START` - spustí trénink od začátku s vybraným agentem
-- `PAUSE` / `RESUME` - pozastaví nebo znovu spustí aktuální běh bez ztráty generace
-- `NEXT GEN` - ručně ukončí aktuální generaci a vybere nejlepší auta stejně jako při vypršení času
-- `RELOAD SET` - načte z polí nové `pocet_aut`, `cars_to_next`, `save_as`, `load_from` a `max_time`, potom ukončí aktuální generaci stejnou logikou jako `NEXT GEN`
-- `RESET` - zastaví a vymaže aktuální běh tréninku
-- `SAVE` - uloží aktuálně nejlepší mozek podle pole `save_as`
-- `LOAD` - načte save z `load_from` a spustí trénink z načtených parametrů
+- `START` - starts training from scratch with the selected agent
+- `PAUSE` / `RESUME` - pauses or resumes the current run without losing the generation
+- `NEXT GEN` - manually ends the current generation and selects the best cars just like when time expires
+- `RELOAD SET` - reads new `pocet_aut`, `cars_to_next`, `save_as`, `load_from`, and `max_time` values from the fields, then ends the current generation with the same logic as `NEXT GEN`
+- `RESET` - stops and clears the current training run
+- `SAVE` - saves the current best brain according to `save_as`
+- `LOAD` - loads a save from `load_from` and starts training from the loaded parameters
 
-`RELOAD SET` nepouští `LOAD` ze souboru. Jen přebere nové hodnoty nastavení pro další generaci a zachová běžnou logiku výběru nejlepších aut a mutací.
+`RELOAD SET` does not run `LOAD` from a file. It only applies new setting values for the next generation and keeps the normal logic for selecting the best cars and mutating them.
 
-Pokud je `cars_to_next` mimo povolený rozsah, program ho upraví na nejbližší bezpečnou hodnotu a vypíše varování do konzole. `SAVE` před spuštěním nebo načtením tréninku jen vypíše hlášku, protože ještě není co ukládat.
+If `cars_to_next` is outside the allowed range, the program clamps it to the nearest safe value and prints a warning to the console. `SAVE` before starting or loading training only prints a message, because there is nothing to save yet.
 
-Doporučení pro názvy savů:
+Recommended save names:
 
 ```text
-AIbrain_<NazevTymu>.npz
+AIbrain_<TeamName>.npz
 ```
 
-Například:
+For example:
 
 ```text
 AIbrain_SAFR.npz
 ```
 
-Savy se ukládají do:
+Saves are stored in:
 
 ```text
 students/saves/
 ```
 
-## Načítání savů
+## Loading saves
 
-Tlačítko `LOAD` v tréninku hledá save v tomto pořadí:
+The `LOAD` button in training searches for a save in this order:
 
 ```text
-students/saves/<nazev>
-students/saves/<nazev>.npz
+students/saves/<name>
+students/saves/<name>.npz
 ```
 
-To znamená, že do `load_from` můžete napsat například `FAST` i `FAST.npz`.
+This means you can enter for example `FAST` or `FAST.npz` into `load_from`.
 
-Pokud save neexistuje, nejde otevřít nebo nepasuje k aktuálně vybranému agentovi, program nespadne. Vypíše chybu do konzole a trénink nespustí.
+If the save does not exist, cannot be opened, or does not match the currently selected agent, the program does not crash. It prints an error to the console and training does not start.
 
-Důležité: save musí odpovídat architektuře agenta. Například parametry pro `AIbrain_2layer` nemusí jít načíst do `AIbrain_linear`.
+Important: the save must match the agent architecture. For example, parameters for `AIbrain_2layer` may not be loadable into `AIbrain_linear`.
 
-## Monitoring tréninku
+## Training monitoring
 
-Vpravo v tréninkové scéně je jednoduchý živý monitor:
+On the right side of the training scene there is a simple live monitor:
 
-- `Agent` - aktuálně vybraný agent
-- `Gen` - aktuální generace a čas generace
-- `Alive` - kolik aut ještě jede
-- `Crash` - kolik aut skončilo
-- `Best` - nejlepší skóre v aktuální generaci
-- `All` - nejlepší skóre za celý běh
-- `Avg` - průměrné skóre generace
-- `Med` - medián skóre generace
-- `Stag` - kolik generací se nezlepšilo nejlepší skóre
-- `Save` - cílový název savu
+- `Agent` - currently selected agent
+- `Gen` - current generation and generation time
+- `Alive` - how many cars are still driving
+- `Crash` - how many cars have ended
+- `Best` - best score in the current generation
+- `All` - best score of the whole run
+- `Avg` - average generation score
+- `Med` - generation score median
+- `Stag` - how many generations have passed without improving the best score
+- `Save` - target save name
 
-Monitor je orientační. Když rychle roste `Crash` a `Best` se nezlepšuje, agent nejspíš potřebuje lepší rozhodování, mutaci nebo skórování.
+The monitor is informational. If `Crash` grows quickly and `Best` does not improve, the agent probably needs better decision logic, mutation, or scoring.
 
-## Logy a grafy tréninku
+## Training logs and plots
 
-Každý nový `START` nebo úspěšný `LOAD` v tréninku založí vlastní CSV log. Po každé dokončené generaci se přidá jeden řádek s metrikami:
+Each new `START` or successful `LOAD` in training creates its own CSV log. After each completed generation, one row with metrics is appended:
 
-- nejlepší skóre generace
-- průměrné skóre generace
-- medián skóre generace
-- počet naražených aut
-- počet aktivních aut
-- nejlepší skóre celého běhu
-- stagnace, čas generace, agent, mapa a název savu
+- best score of the generation
+- average score of the generation
+- median score of the generation
+- number of crashed cars
+- number of active cars
+- best score of the whole run
+- stagnation, generation time, agent, map, and save name
 
-CSV logy se ukládají do:
+CSV logs are saved into:
 
 ```text
 students/results/training_logs/
 ```
 
-Pokud je dostupný balíček `matplotlib`, trénink navíc průběžně ukládá PNG graf do:
+If the `matplotlib` package is available, training also saves a live PNG plot into:
 
 ```text
 students/results/training_plots/
 ```
 
-Výchozí interval grafu je každých 5 dokončených generací. Nastavení je v `constants.py`:
+The default plot interval is every 5 completed generations. The setting is in `constants.py`:
 
 ```python
 TRAINING_PLOT_EVERY = 5
 ```
 
-Hodnota `10` znamená ukládání každých 10 generací. Hodnota `0` PNG graf vypne. Pokud `matplotlib` není nainstalovaný nebo graf nejde uložit, program jen vypíše hlášku do konzole a trénink pokračuje dál. CSV logování na `matplotlib` nezávisí.
+The value `10` means saving every 10 generations. The value `0` disables PNG plots. If `matplotlib` is not installed or the plot cannot be saved, the program only prints a message to the console and training continues. CSV logging does not depend on `matplotlib`.
 
-## Mapy
+## Maps
 
-Výchozí mapy jsou v:
+Default maps are in:
 
 ```text
 DefaultSettings/
 ```
 
-Studentské mapy jsou v:
+Student maps are in:
 
 ```text
 students/maps/
 ```
 
-Použitelné názvy v menu:
+Usable names in the menu:
 
-- `DefaultRace` - výchozí závodní trať
-- `DefaultReset` - základní mapa pro editor
-- vlastní název mapy ze `students/maps/`, například `moje_mapa`
+- `DefaultRace` - default race track
+- `DefaultReset` - base map for the editor
+- a custom map name from `students/maps/`, for example `my_map`
 
-Editor map:
+Map editor:
 
-- v menu vyberte `Mapa`
-- do textového pole napište název mapy bez `.csv`
-- `Save map` uloží mapu do `students/maps/<nazev>.csv`
-- `Load` načte mapu ze `students/maps/<nazev>.csv`
-- `RESET` načte `DefaultSettings/DefaultReset.csv`
+- choose `Mapa` in the menu
+- enter the map name without `.csv` into the text field
+- `Save map` saves the map into `students/maps/<name>.csv`
+- `Load` loads the map from `students/maps/<name>.csv`
+- `RESET` loads `DefaultSettings/DefaultReset.csv`
 
-Startovní tile je:
+The starting tile is:
 
 ```text
 road_dirt42
 ```
 
-Klikáním do levé části mapy měníte dlaždice. Opakované kliknutí na stejnou pozici cykluje dostupné typy dlaždic.
+Click in the left part of the map to change tiles. Repeated clicking on the same position cycles through the available tile types.
 
-## Souboj dvou agentů
+## Duel between two agents
 
-V menu vyberte `Souboj`.
+Select `Souboj` in the menu.
 
-Pole vpravo:
+Fields on the right:
 
-- `map_name` - název mapy
-- `engine1_class` - třída prvního agenta
-- `engine1_save` - save prvního agenta
-- `engine2_class` - třída druhého agenta
-- `engine2_save` - save druhého agenta
+- `map_name` - map name
+- `engine1_class` - class of the first agent
+- `engine1_save` - save of the first agent
+- `engine2_class` - class of the second agent
+- `engine2_save` - save of the second agent
 
-Tlačítka:
+Buttons:
 
-- `LOAD MAP` - načte mapu
-- `START DUEL` - spustí duel
+- `LOAD MAP` - loads the map
+- `START DUEL` - starts the duel
 
-Agent se hledá podle třídy/souboru. Save se hledá v `students/saves/`.
+The agent is found by class/file name. The save is searched in `students/saves/`.
 
-## Benchmark více agentů
+## Benchmarking multiple agents
 
-Benchmark slouží k porovnání více agentů najednou. V menu vyberte `Benchmark`.
+Benchmark is used to compare multiple agents at once. Select `Benchmark` in the menu.
 
-Výchozí soubor se seznamem agentů:
+Default file with the agent list:
 
 ```text
 students/benchmark_agents.yaml
 ```
 
-Formát:
+Format:
 
 ```yaml
 agents:
@@ -347,107 +347,107 @@ agents:
     save: AIbrain_TeamB.npz
 ```
 
-Pole v benchmark scéně:
+Fields in the benchmark scene:
 
-- `map_name` - mapa pro benchmark
-- `finish_row` - řádek cílové dlaždice
-- `finish_col` - sloupec cílové dlaždice
-- `time_limit_s` - časový limit
-- `output_csv` - název výstupního CSV
-- `agents_file` - YAML nebo TXT soubor se seznamem agentů
-- `engines_fallback` - ruční seznam agentů, pokud soubor není dostupný
+- `map_name` - benchmark map
+- `finish_row` - row of the finish tile
+- `finish_col` - column of the finish tile
+- `time_limit_s` - time limit
+- `output_csv` - output CSV name
+- `agents_file` - YAML or TXT file with the agent list
+- `engines_fallback` - manual agent list if the file is not available
 
-Výchozí `agents_file` je `benchmark_agents.yaml`, což se překládá na:
+The default `agents_file` is `benchmark_agents.yaml`, which resolves to:
 
 ```text
 students/benchmark_agents.yaml
 ```
 
-Výstupy benchmarku se ukládají do:
+Benchmark outputs are saved into:
 
 ```text
 students/results/
 ```
 
-Během běžícího benchmarku se vlevo na mapě zobrazuje bílý seznam `#pořadí název_mozku`. Pořadí odpovídá YAML/TXT seznamu. Stejné číslo se kreslí výrazně žlutě s tmavým obrysem přímo přes auto a ukládá se i do výsledkového CSV ve sloupci `benchmark_order`.
+During a running benchmark, the left side of the map shows a white list in the form `#order brain_name`. The order matches the YAML/TXT list. The same number is drawn in bright yellow with a dark outline directly over the car and is also saved into the result CSV in the `benchmark_order` column.
 
-Výsledný `rank` je závodní pořadí: auta, která dojela do cíle, jsou řazená podle času. Auta, která nedojela, jsou až za nimi podle stavu `TIMEOUT`, `CRASH`, `OUT`. Najetá vzdálenost `distance_tiles` zůstává jen informační metrika v CSV a ve výsledkovém výpisu.
+The final `rank` is racing order: cars that reached the finish are sorted by time. Cars that did not finish are placed after them by status `TIMEOUT`, `CRASH`, `OUT`. Traveled distance `distance_tiles` remains only an informational metric in the CSV and result output.
 
-Ruční fallback formát:
+Manual fallback format:
 
 ```text
 AIbrain_TeamA:AIbrain_TeamA.npz; AIbrain_TeamB:AIbrain_TeamB.npz
 ```
 
-Podporované oddělovače položek jsou `;` nebo `|`. Mezi agentem a savem lze použít `:`, `,` nebo mezeru.
+Supported item separators are `;` or `|`. Between agent and save, you can use `:`, `,`, or a space.
 
-## Doporučený studentský postup
+## Recommended student workflow
 
-1. Zkopírujte si myšlenkově vzor z `AI_engines/AIbrain_linear.py`.
-2. Vytvořte `students/agents/AIbrain_<NazevTymu>.py`.
-3. Zachovejte povinné metody a stejný název souboru i třídy.
-4. V menu vyberte svého agenta.
-5. Trénujte na `DefaultRace` a na vlastních mapách.
-6. Sledujte monitor tréninku.
-7. Uložte nejlepší save do `students/saves/AIbrain_<NazevTymu>.npz`.
-8. Ověřte, že `LOAD` dokáže váš save načíst.
-9. Vyzkoušejte benchmark nebo duel.
-10. Odevzdejte `.py` a `.npz`.
+1. Use `AI_engines/AIbrain_linear.py` as the mental reference.
+2. Create `students/agents/AIbrain_<TeamName>.py`.
+3. Keep the required methods and the same file/class name.
+4. Select your agent in the menu.
+5. Train on `DefaultRace` and on custom maps.
+6. Watch the training monitor.
+7. Save the best result into `students/saves/AIbrain_<TeamName>.npz`.
+8. Verify that `LOAD` can load your save.
+9. Try a benchmark or duel.
+10. Submit the `.py` and `.npz`.
 
-## Časté problémy
+## Common problems
 
-`Agent nebyl nalezen`
+`Agent was not found`
 
-- zkontrolujte, že soubor je ve `students/agents/`
-- zkontrolujte, že název souboru a třídy je stejný
-- zkontrolujte, že třída implementuje povinné metody
+- check that the file is in `students/agents/`
+- check that the file name and class name are the same
+- check that the class implements the required methods
 
-`Save nebyl nalezen`
+`Save was not found`
 
-- zkontrolujte `students/saves/`
-- do `load_from` můžete zadat název s `.npz` i bez `.npz`
+- check `students/saves/`
+- in `load_from`, you can enter the name with or without `.npz`
 
-`Save nejde použít pro aktuálního agenta`
+`Save cannot be used for the current agent`
 
-- nejspíš načítáte parametry jiné architektury
-- vyberte správný agent v menu nebo správný `.npz` soubor
+- you are probably loading parameters for a different architecture
+- choose the correct agent in the menu or the correct `.npz` file
 
-`Mapa neexistuje`
+`Map does not exist`
 
-- pro výchozí mapy použijte `DefaultRace` nebo `DefaultReset`
-- pro vlastní mapy zkontrolujte `students/maps/<nazev>.csv`
+- for default maps, use `DefaultRace` or `DefaultReset`
+- for custom maps, check `students/maps/<name>.csv`
 
-`Benchmark nenašel agenty`
+`Benchmark did not find agents`
 
-- zkontrolujte `students/benchmark_agents.yaml`
-- zkontrolujte odsazení YAML
-- zkontrolujte, že agent existuje a save je ve `students/saves/`
+- check `students/benchmark_agents.yaml`
+- check YAML indentation
+- check that the agent exists and the save is in `students/saves/`
 
-## Typování kódu
+## Code typing
 
-Engine používá postupné, měkké typování. Sdílené protokoly jsou v:
+The engine uses gradual, soft typing. Shared protocols are in:
 
 ```text
 core/protocols.py
 ```
 
-Nejdůležitější je `AgentProtocol`, který popisuje metody, které musí studentský agent nabídnout. Typování slouží pro lepší orientaci, editor a bezpečnější úpravy enginu; nemění běh programu.
+The most important one is `AgentProtocol`, which describes the methods a student agent must provide. Typing helps orientation, editor support, and safer engine changes; it does not change program behavior.
 
-Python soubory v projektu používají `from __future__ import annotations`, takže lze anotace doplňovat postupně a bez vlivu na chování programu.
+Python files in the project use `from __future__ import annotations`, so annotations can be added gradually without affecting program behavior.
 
-Konfigurace pro `pyright` a `mypy` je v `pyproject.toml`. Studentské agenty nejsou v základní kontrole striktně vynucované, aby zůstaly flexibilní pro výuku. Pokud máte nástroj nainstalovaný, lze kontrolu spustit například:
+Configuration for `pyright` and `mypy` is in `pyproject.toml`. Student agents are not strictly enforced by the default check so they remain flexible for teaching. If you have the tool installed, you can run for example:
 
 ```bash
 pyright
 mypy
 ```
 
-## Poznámka k zvuku
+## Audio note
 
-V `main.py` je nastavený dummy audio driver:
+`main.py` sets a dummy audio driver:
 
 ```python
 os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
 ```
 
-Je to kvůli stabilitě Pygame na některých systémech. Pro práci studentů není potřeba nic měnit.
+This improves Pygame stability on some systems. Students do not need to change anything.

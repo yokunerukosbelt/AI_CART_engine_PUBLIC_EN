@@ -1,18 +1,18 @@
 # AI Cart V2
 
-AI Cart V2 je výukový Pygame projekt pro evoluční trénování závodních AI agentů. Studenti píšou vlastní "mozek" auta, trénují ho na mapě, ukládají parametry do `.npz` souboru a potom mohou agenty porovnávat v duelu nebo benchmarku.
+AI Cart V2 is an educational Pygame project for evolutionary training of racing AI agents. Students write their own car "brain", train it on a map, save the parameters into an `.npz` file, and then compare agents in duels or benchmarks.
 
-Autor: Karel Šafr, PhD
+Author: Karel Šafr, PhD
 
-## Pro koho projekt je
+## Who this project is for
 
-- studenti, kteří chtějí vytvořit vlastního agenta
-- vyučující, kteří chtějí spouštět tréninky, benchmarky a porovnání týmů
-- kdokoliv, kdo si chce prohlédnout jednoduchý evoluční závodní engine v Pythonu
+- students who want to create their own agent
+- teachers who want to run training sessions, benchmarks, and team comparisons
+- anyone who wants to inspect a simple evolutionary racing engine in Python
 
-## Rychlé spuštění
+## Quick start
 
-Spouštějte projekt z kořene `AI_Cart_engine_V2/`.
+Run the project from the `AI_Cart_engine_V2/` root directory.
 
 ```bash
 python3 -m venv .venv
@@ -21,32 +21,32 @@ pip install pygame numpy
 python main.py
 ```
 
-Na Windows použijte aktivaci virtuálního prostředí podle svého terminálu, například `.venv\Scripts\activate`.
+On Windows, use the virtual environment activation command for your terminal, for example `.venv\Scripts\activate`.
 
-## Kde co najít
+## Where to find things
 
-- [STUDENT_GUIDE.md](STUDENT_GUIDE.md) - hlavní návod pro studenty: vytvoření agenta, trénink, save/load, mapy, duel a benchmark
-- [AGENT_INTERFACE.md](AGENT_INTERFACE.md) - přesný kontrakt mezi enginem a studentským agentem
-- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) - mapa projektu, běhový tok a hranice mezi enginem a studentskou prací
-- [students/README.md](students/README.md) - krátký tahák přímo ve studentské složce
+- [STUDENT_GUIDE.en.md](STUDENT_GUIDE.en.md) - the main student guide: creating an agent, training, save/load, maps, duels, and benchmarks
+- [AGENT_INTERFACE.en.md](AGENT_INTERFACE.en.md) - the exact contract between the engine and a student agent
+- [PROJECT_STRUCTURE.en.md](PROJECT_STRUCTURE.en.md) - project map, runtime flow, and the boundary between engine code and student work
+- [students/README.en.md](students/README.en.md) - a short cheat sheet directly in the student workspace
 
-## Základní princip
+## Basic idea
 
-Student dodá hlavně dva soubory:
+A student mainly submits two files:
 
 ```text
-students/agents/AIbrain_<NazevTymu>.py
-students/saves/AIbrain_<NazevTymu>.npz
+students/agents/AIbrain_<TeamName>.py
+students/saves/AIbrain_<TeamName>.npz
 ```
 
-Agent se načítá automaticky ze `students/agents/`. Natrénované parametry se ukládají do `students/saves/`. Vlastní mapy patří do `students/maps/` a výsledky benchmarků, tréninkové CSV logy a grafy do `students/results/`.
+Agents are loaded automatically from `students/agents/`. Trained parameters are saved into `students/saves/`. Custom maps belong in `students/maps/`, and benchmark results, training CSV logs, and plots go into `students/results/`.
 
-Výchozí agent je `AIbrain_linear`.
+The default agent is `AIbrain_linear`.
 
-## První orientace
+## First orientation
 
-Pokud jste student a chcete začít pracovat, otevřete [STUDENT_GUIDE.md](STUDENT_GUIDE.md).
+If you are a student and want to start working, open [STUDENT_GUIDE.en.md](STUDENT_GUIDE.en.md).
 
-Pokud chcete jen vědět, jaké metody musí agent mít, otevřete [AGENT_INTERFACE.md](AGENT_INTERFACE.md).
+If you only need to know which methods an agent must provide, open [AGENT_INTERFACE.en.md](AGENT_INTERFACE.en.md).
 
-Pokud upravujete engine nebo kontrolujete strukturu projektu, otevřete [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
+If you are modifying the engine or checking the project structure, open [PROJECT_STRUCTURE.en.md](PROJECT_STRUCTURE.en.md).

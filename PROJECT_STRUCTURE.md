@@ -1,42 +1,47 @@
-# Mapa projektu AI_Cart_engine_V2
+# AI_Cart_engine_V2 Project Map
 
-Tento dokument popisuje aktuální strukturu projektu a hranice mezi enginem a studentskou prací.
+This document describes the current project structure and the boundary between the engine and student work.
 
-## Přehled složek
+## Folder overview
 
 ```text
 AI_Cart_engine_V2/
-├── main.py                         # start aplikace, inicializace Pygame, atlasů, scén a agent registry
-├── constants.py                    # konstanty okna, cest, dlaždic, rychlostí a raycastů
-├── README.md                       # stručný rozcestník projektu
-├── STUDENT_GUIDE.md                # hlavní návod pro studenty
-├── AGENT_INTERFACE.md              # stabilní kontrakt mezi enginem a agentem
-├── PROJECT_STRUCTURE.md            # tato mapa projektu
-├── pyproject.toml                  # konfigurace typovacích nástrojů
-├── AI_engines/                     # vestavěné vzory agentů
-│   ├── AIbrain_linear.py           # výchozí agent
-│   ├── AIbrain_TeamName.py         # jednoduchá šablona
-│   └── AIbrain_2layer.py           # složitější ukázkový agent
-├── students/                       # studentská práce a výstupy
-│   ├── agents/                     # studentské .py agenty
-│   ├── saves/                      # uložené .npz parametry
-│   ├── maps/                       # studentské .csv mapy
-│   ├── results/                    # výsledky benchmarku, logy tréninku a grafy
-│   ├── benchmark_agents.yaml       # seznam agentů pro benchmark
-│   └── README.md                   # stručný návod pro studentskou složku
-├── core/                           # jádro enginu
-├── scenes/                         # jednotlivé obrazovky aplikace
-├── my_sprites/                     # auta a kolizní bloky
-├── UI/                             # jednoduché UI prvky
-├── DefaultSettings/                # výchozí mapy enginu
-└── assets/racing-pack/             # grafická aktiva
+├── main.py                         # application start, Pygame setup, atlases, scenes, and agent registry
+├── constants.py                    # window, path, tile, speed, and raycast constants
+├── README.md                       # short project index in Czech
+├── README.en.md                    # short project index in English
+├── STUDENT_GUIDE.md                # main student guide in Czech
+├── STUDENT_GUIDE.en.md             # main student guide in English
+├── AGENT_INTERFACE.md              # stable contract between engine and agent in Czech
+├── AGENT_INTERFACE.en.md           # stable contract between engine and agent in English
+├── PROJECT_STRUCTURE.md            # project map in Czech
+├── PROJECT_STRUCTURE.en.md         # this project map in English
+├── pyproject.toml                  # type checker configuration
+├── AI_engines/                     # built-in example agents
+│   ├── AIbrain_linear.py           # default agent
+│   ├── AIbrain_TeamName.py         # simple template
+│   └── AIbrain_2layer.py           # more advanced example agent
+├── students/                       # student work and outputs
+│   ├── agents/                     # student .py agents
+│   ├── saves/                      # saved .npz parameters
+│   ├── maps/                       # student .csv maps
+│   ├── results/                    # benchmark results, training logs, and plots
+│   ├── benchmark_agents.yaml       # list of agents for benchmark runs
+│   ├── README.md                   # short guide for the student folder in Czech
+│   └── README.en.md                # short guide for the student folder in English
+├── core/                           # engine core
+├── scenes/                         # application screens
+├── my_sprites/                     # cars and collision blocks
+├── UI/                             # simple UI elements
+├── DefaultSettings/                # default engine maps
+└── assets/racing-pack/             # graphical assets
 ```
 
-## Hranice odpovědnosti
+## Responsibility boundary
 
-`students/` je pracovní prostor pro studenty. Sem patří vlastní agenti, natrénované savy, mapy a výsledky benchmarku.
+`students/` is the workspace for students. Custom agents, trained saves, maps, and benchmark results belong there.
 
-Engine tvoří hlavně:
+The engine mainly consists of:
 
 - `main.py`
 - `constants.py`
@@ -46,18 +51,18 @@ Engine tvoří hlavně:
 - `UI/`
 - `AI_engines/`
 
-Studenti by engine neměli měnit. Pokud potřebují experimentovat, výsledné odevzdání má pořád být jen dvojice `.py` agenta a `.npz` savu ve `students/`.
+Students should not modify the engine. If they need to experiment, the final submission should still be only the agent `.py` file and `.npz` save in `students/`.
 
-## Běhový tok aplikace
+## Application runtime flow
 
-1. `main.py` nastaví prostředí Pygame.
-2. Načte grafické atlasy přes `core/TextureAtlas.py`.
-3. Načte výchozí mapu přes `core/CsvTilemap.py`.
-4. `core/AgentRegistry.py` automaticky objeví agenty.
-5. `SceneManager` dostane mapu, atlasy, registry agentů a scény.
-6. Hlavní smyčka předává eventy, update a draw aktuální scéně.
+1. `main.py` sets up the Pygame environment.
+2. It loads graphical atlases through `core/TextureAtlas.py`.
+3. It loads the default map through `core/CsvTilemap.py`.
+4. `core/AgentRegistry.py` automatically discovers agents.
+5. `SceneManager` receives the map, atlases, agent registry, and scenes.
+6. The main loop forwards events, update, and draw calls to the current scene.
 
-Zjednodušený tok:
+Simplified flow:
 
 ```text
 main.py
@@ -73,132 +78,132 @@ main.py
         └── BenchmarkScene
 ```
 
-## Automatické načítání agentů
+## Automatic agent loading
 
-Agent registry hledá agenty v pořadí:
+The agent registry searches for agents in this order:
 
 ```text
 students/agents/
 AI_engines/
 ```
 
-Výchozí agent je:
+The default agent is:
 
 ```text
 AIbrain_linear
 ```
 
-Agent je platný, pokud:
+An agent is valid if:
 
-- soubor má název například `AIbrain_TeamA.py`
-- třída uvnitř se jmenuje `AIbrain_TeamA`
-- třída má povinné metody definované v `core/AgentRegistry.py`
+- the file is named for example `AIbrain_TeamA.py`
+- the class inside is named `AIbrain_TeamA`
+- the class has the required methods defined in `core/AgentRegistry.py`
 
-Pokud je stejný název ve `students/agents/` i `AI_engines/`, použije se studentská verze.
+If the same name exists in both `students/agents/` and `AI_engines/`, the student version is used.
 
-## Cesty k mapám
+## Map paths
 
-Mapy řeší `SceneManager.resolve_map_path()`.
+Maps are resolved by `SceneManager.resolve_map_path()`.
 
-Pravidla:
+Rules:
 
-1. Prázdný název znamená `DefaultRace`.
-2. `DefaultRace` a `DefaultReset` se berou z `DefaultSettings/`.
-3. Studentské mapy se hledají ve `students/maps/`.
+1. An empty name means `DefaultRace`.
+2. `DefaultRace` and `DefaultReset` are loaded from `DefaultSettings/`.
+3. Student maps are searched in `students/maps/`.
 
-Aktuální doporučené umístění:
+Current recommended location:
 
 ```text
-students/maps/<nazev>.csv
+students/maps/<name>.csv
 ```
 
-Výchozí mapy:
+Default maps:
 
 ```text
 DefaultSettings/DefaultRace.csv
 DefaultSettings/DefaultReset.csv
 ```
 
-## Cesty k savům
+## Save paths
 
-Nové savy patří do:
+New saves belong in:
 
 ```text
 students/saves/
 ```
 
-Tréninkové tlačítko `LOAD` zkouší:
+The training `LOAD` button tries:
 
 ```text
-students/saves/<nazev>
-students/saves/<nazev>.npz
+students/saves/<name>
+students/saves/<name>.npz
 ```
 
-Pokud soubor chybí, nejde načíst nebo nepasuje k aktuálnímu agentovi, trénink vypíše chybu a nespustí se.
+If the file is missing, cannot be loaded, or does not match the current agent, training prints an error and does not start.
 
-## Core moduly
+## Core modules
 
-- `core/AgentRegistry.py` - objevování a validace agentů
-- `core/CsvTilemap.py` - načtení, normalizace, vykreslení a uložení CSV map
-- `core/TextureAtlas.py` - načtení spritesheetů a pojmenovaných textur
-- `core/TrainingLogger.py` - CSV logy generací a volitelné PNG grafy tréninku
-- `core/VectorIterator.py` - cyklení dlaždic v editoru map
-- `core/car_manager.py` - evoluční trénink, generace, skórování, save/load, validace vstupů a monitoring
+- `core/AgentRegistry.py` - agent discovery and validation
+- `core/CsvTilemap.py` - CSV map loading, normalization, drawing, and saving
+- `core/TextureAtlas.py` - spritesheet and named texture loading
+- `core/TrainingLogger.py` - generation CSV logs and optional PNG training plots
+- `core/VectorIterator.py` - tile cycling in the map editor
+- `core/car_manager.py` - evolutionary training, generations, scoring, save/load, input validation, and monitoring
 
-## Scény
+## Scenes
 
-- `scenes/MenuScene.py` - hlavní menu, výběr mapy a agenta
-- `scenes/MapEditorScene.py` - editor map, ukládá do `students/maps/`
-- `scenes/PlayGameScene.py` - ruční jízda
-- `scenes/TrainingScene.py` - evoluční trénink a živý monitor
-- `scenes/DuelScene.py` - souboj dvou agentů
-- `scenes/BenchmarkScene.py` - porovnání více agentů ze YAML/TXT seznamu
-- `scenes/SceneManager.py` - přepínání scén, sdílený stav, cesty k mapám a agentům
+- `scenes/MenuScene.py` - main menu, map selection, and agent selection
+- `scenes/MapEditorScene.py` - map editor, saves into `students/maps/`
+- `scenes/PlayGameScene.py` - manual driving
+- `scenes/TrainingScene.py` - evolutionary training and live monitor
+- `scenes/DuelScene.py` - duel between two agents
+- `scenes/BenchmarkScene.py` - comparison of multiple agents from a YAML/TXT list
+- `scenes/SceneManager.py` - scene switching, shared state, map paths, and agents
 
-## Sprite a fyzika
+## Sprites and physics
 
-- `my_sprites/AI_car.py` - auto řízené agentem
-- `my_sprites/car.py` - ručně řízené auto
-- `my_sprites/block.py` - kolizní hrany mapy
+- `my_sprites/AI_car.py` - car controlled by an agent
+- `my_sprites/car.py` - manually controlled car
+- `my_sprites/block.py` - collision edges of the map
 
-AI auto:
+AI car:
 
-- dostává raycast vzdálenosti
-- volá `brain.decide(...)`
-- prahuje výstupy přes `> 0.5`
-- posílá agentovi pozici a rychlost přes `passcardata`
-- aktualizuje skóre přes `calculate_score(distance, time, no)`
+- receives raycast distances
+- calls `brain.decide(...)`
+- thresholds outputs with `> 0.5`
+- passes position and speed to the agent through `passcardata`
+- updates score through `calculate_score(distance, time, no)`
 
 ## UI
 
-- `UI/Button.py` - jednoduché tlačítko s callbackem `action()`
-- `UI/TextInput.py` - textové pole
-- `UI/MakeGrid.py` - pomocná mřížka pro editor map
+- `UI/Button.py` - simple button with an `action()` callback
+- `UI/TextInput.py` - text input field
+- `UI/MakeGrid.py` - helper grid for the map editor
 
-## Trénink
+## Training
 
-Trénink řídí `scenes/TrainingScene.py` a evoluční logiku drží `core/car_manager.py`.
+Training is controlled by `scenes/TrainingScene.py`, and the evolutionary logic lives in `core/car_manager.py`.
 
-Hlavní ovládání:
+Main controls:
 
-- `START` - založí nový trénink podle aktuálních polí
-- `PAUSE` / `RESUME` - pozastaví nebo obnoví běžící generaci
-- `NEXT GEN` - ukončí aktuální generaci stejnou logikou jako vypršení času
-- `RELOAD SET` - načte nové `pocet_aut`, `cars_to_next`, `save_as`, `load_from` a `max_time`, potom přejde do další generace běžnou evoluční logikou
-- `RESET` - zastaví a vymaže aktuální běh
-- `SAVE` / `LOAD` - ukládání a načítání parametrů ze `students/saves/`
+- `START` - starts a new training run from the current fields
+- `PAUSE` / `RESUME` - pauses or resumes the running generation
+- `NEXT GEN` - ends the current generation using the same logic as a timeout
+- `RELOAD SET` - reloads `pocet_aut`, `cars_to_next`, `save_as`, `load_from`, and `max_time`, then moves to the next generation using the normal evolutionary logic
+- `RESET` - stops and clears the current run
+- `SAVE` / `LOAD` - saves and loads parameters from `students/saves/`
 
-`RELOAD SET` nenačítá save ze souboru; jen převezme nové nastavení pro další generaci. Logika výběru nejlepších aut a mutací zůstává stejná jako u normálního konce generace.
+`RELOAD SET` does not load a save from a file; it only applies new settings for the next generation. The selection of the best cars and mutations stays the same as during a normal generation end.
 
 ## Benchmark
 
-Výchozí seznam agentů:
+Default agent list:
 
 ```text
 students/benchmark_agents.yaml
 ```
 
-Formát:
+Format:
 
 ```yaml
 agents:
@@ -206,37 +211,37 @@ agents:
     save: AIbrain_TeamA.npz
 ```
 
-Výsledky:
+Results:
 
 ```text
 students/results/
 ```
 
-Rank v benchmarku je závodní pořadí. Dojetá auta jsou řazená podle času, nedojetá auta jsou až za nimi podle stavu `TIMEOUT`, `CRASH`, `OUT`. Najetá vzdálenost zůstává jen informační metrika.
+Benchmark rank is racing order. Finished cars are sorted by time, and unfinished cars are placed after them by status `TIMEOUT`, `CRASH`, `OUT`. Traveled distance remains only an informational metric.
 
-## Tréninkové logy
+## Training logs
 
-Trénink ukládá jeden CSV řádek po každé dokončené generaci:
+Training writes one CSV row after each completed generation:
 
 ```text
 students/results/training_logs/
 ```
 
-Pokud je dostupný `matplotlib`, ukládá se i průběžný PNG graf:
+If `matplotlib` is available, it also saves a live PNG plot:
 
 ```text
 students/results/training_plots/
 ```
 
-Interval PNG grafu řídí `TRAINING_PLOT_EVERY` v `constants.py`. Chybějící nebo nefunkční `matplotlib` trénink nezastaví.
+The PNG plot interval is controlled by `TRAINING_PLOT_EVERY` in `constants.py`. Missing or broken `matplotlib` does not stop training.
 
-Benchmark umí použít i ruční fallback pole ve scéně:
+The benchmark can also use the manual fallback field in the scene:
 
 ```text
 AIbrain_TeamA:AIbrain_TeamA.npz; AIbrain_TeamB:AIbrain_TeamB.npz
 ```
 
-Aktuální studentské složky:
+Current student folders:
 
 ```text
 students/agents/
@@ -245,18 +250,18 @@ students/maps/
 students/results/
 ```
 
-## Dokumentace
+## Documentation
 
-- `README.md` - stručný rozcestník projektu
-- `STUDENT_GUIDE.md` - postupy pro studenty
-- `AGENT_INTERFACE.md` - přesné rozhraní studentského agenta vůči enginu
-- `students/README.md` - krátký návod přímo ve studentském workspace
-- `PROJECT_STRUCTURE.md` - technická mapa projektu
+- `README.md` / `README.en.md` - short project index
+- `STUDENT_GUIDE.md` / `STUDENT_GUIDE.en.md` - student procedures
+- `AGENT_INTERFACE.md` / `AGENT_INTERFACE.en.md` - exact student agent interface against the engine
+- `students/README.md` / `students/README.en.md` - short guide directly in the student workspace
+- `PROJECT_STRUCTURE.md` / `PROJECT_STRUCTURE.en.md` - technical project map
 
-## Typování
+## Typing
 
-- `core/protocols.py` - sdílené typové protokoly a aliasy
-- `AgentProtocol` - rozhraní, které engine očekává od agentů
-- `pyproject.toml` - mírná konfigurace pro `pyright` a `mypy`
+- `core/protocols.py` - shared type protocols and aliases
+- `AgentProtocol` - interface expected from agents by the engine
+- `pyproject.toml` - mild configuration for `pyright` and `mypy`
 
-Všechny Python soubory používají `from __future__ import annotations`, aby šly typy doplňovat postupně bez změny runtime chování. Typování je zavedené jako vývojová pomůcka a nemá měnit studentské API.
+All Python files use `from __future__ import annotations`, so types can be added gradually without changing runtime behavior. Typing is introduced as a development aid and should not change the student API.
