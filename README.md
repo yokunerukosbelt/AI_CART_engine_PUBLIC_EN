@@ -25,10 +25,10 @@ On Windows, use the virtual environment activation command for your terminal, fo
 
 ## Where to find things
 
-- [STUDENT_GUIDE.en.md](STUDENT_GUIDE.en.md) - the main student guide: creating an agent, training, save/load, maps, duels, and benchmarks
-- [AGENT_INTERFACE.en.md](AGENT_INTERFACE.en.md) - the exact contract between the engine and a student agent
-- [PROJECT_STRUCTURE.en.md](PROJECT_STRUCTURE.en.md) - project map, runtime flow, and the boundary between engine code and student work
-- [students/README.en.md](students/README.en.md) - a short cheat sheet directly in the student workspace
+- [STUDENT_GUIDE.md](STUDENT_GUIDE.md) - the main student guide: creating an agent, training, save/load, maps, duels, and benchmarks
+- [AGENT_INTERFACE.md](AGENT_INTERFACE.md) - the exact contract between the engine and a student agent
+- [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) - project map, runtime flow, and the boundary between engine code and student work
+- [students/README.md](students/README.md) - a short cheat sheet directly in the student workspace
 
 ## Basic idea
 

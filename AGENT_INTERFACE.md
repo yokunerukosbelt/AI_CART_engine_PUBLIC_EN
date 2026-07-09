@@ -1,67 +1,67 @@
 # AGENT_INTERFACE.md
 
-Tento dokument popisuje stabilní rozhraní mezi enginem AI Cart V2 a studentským agentem.
+This document describes the stable interface between the AI Cart V2 engine and a student agent.
 
-Je to kontrakt: pokud agent splní pravidla níže, engine ho umí automaticky najít, spustit v tréninku, uložit, načíst, použít v duelu a použít v benchmarku.
+It is a contract: if an agent follows the rules below, the engine can automatically discover it, run it in training, save it, load it, use it in a duel, and use it in a benchmark.
 
-## Umístění a název
+## Location and name
 
-Studentský agent patří do:
+A student agent belongs in:
 
 ```text
 students/agents/
 ```
 
-Soubor i třída musí mít stejné jméno:
+The file and the class must have the same name:
 
 ```text
-students/agents/AIbrain_MujTeam.py
-class AIbrain_MujTeam
+students/agents/AIbrain_MyTeam.py
+class AIbrain_MyTeam
 ```
 
-Název agenta se v menu, benchmark YAML a duelu zadává bez `.py`:
+The agent name is entered in the menu, benchmark YAML, and duel without `.py`:
 
 ```text
-AIbrain_MujTeam
+AIbrain_MyTeam
 ```
 
-Engine hledá agenty v pořadí:
+The engine looks for agents in this order:
 
 1. `students/agents/`
 2. `AI_engines/`
 
-Pokud existuje stejný název v obou složkách, použije se studentská verze.
+If the same name exists in both folders, the student version is used.
 
-## Konstruktor
+## Constructor
 
-Agent musí jít vytvořit bez argumentů:
+The agent must be creatable without arguments:
 
 ```python
-brain = AIbrain_MujTeam()
+brain = AIbrain_MyTeam()
 ```
 
-V `__init__` má agent připravit vše, co potřebuje pro rozhodování, mutace, skóre a ukládání.
+In `__init__`, the agent should prepare everything it needs for decisions, mutations, scoring, and saving.
 
-Doporučené minimum:
+Recommended minimum:
 
 ```python
-self.NAME = "MujTeam"
+self.NAME = "MyTeam"
 self.score = 0.0
 self.store()
 ```
 
-## Povinné atributy
+## Required attributes
 
-Engine očekává:
+The engine expects:
 
-- `NAME` - lidsky čitelný název mozku pro výpisy, benchmark a debug
-- `score` - aktuální fitness hodnota agenta
+- `NAME` - human-readable brain name for output, benchmark, and debug
+- `score` - current fitness value of the agent
 
-`score` má být číslo. Vyšší hodnota znamená lepší agent.
+`score` should be a number. Higher means better.
 
-## Povinné metody
+## Required methods
 
-Registry kontroluje, že agent má tyto metody:
+The registry checks that the agent has these methods:
 
 ```python
 def decide(self, data): ...
@@ -74,45 +74,45 @@ def passcardata(self, x, y, speed): ...
 def getscore(self): ...
 ```
 
-Typovaný tvar stejného rozhraní je v `core/protocols.py` jako `AgentProtocol`.
+The typed version of the same interface is in `core/protocols.py` as `AgentProtocol`.
 
 ## decide(data)
 
-Volá se při řízení auta.
+Called when controlling the car.
 
 ```python
 def decide(self, data):
     return [up, down, left, right]
 ```
 
-`data` je sekvence raycast vzdáleností v dlaždicích. Aktuálně engine používá 9 paprsků:
+`data` is a sequence of raycast distances in tiles. The engine currently uses 9 rays:
 
 ```text
 [-90, -45, -20, -5, 0, 5, 20, 45, 90]
 ```
 
-Výstup musí mít alespoň 4 číselné hodnoty:
+The output must have at least 4 numeric values:
 
 ```text
-index 0 - plyn
-index 1 - brzda
-index 2 - doleva
-index 3 - doprava
+index 0 - throttle
+index 1 - brake
+index 2 - left
+index 3 - right
 ```
 
-Auto akci provede, pokud je příslušná hodnota větší než `0.5`.
+The car performs an action if the corresponding value is greater than `0.5`.
 
-Příklad:
+Example:
 
 ```python
 return [1.0, 0.0, 0.0, 0.8]
 ```
 
-Tento výstup znamená plyn a zatáčení doprava.
+This output means throttle and steering right.
 
 ## passcardata(x, y, speed)
 
-Volá se před `decide`.
+Called before `decide`.
 
 ```python
 def passcardata(self, x, y, speed):
@@ -121,45 +121,45 @@ def passcardata(self, x, y, speed):
     self.speed = speed
 ```
 
-Parametry:
+Parameters:
 
-- `x` - aktuální x pozice auta v pixelech
-- `y` - aktuální y pozice auta v pixelech
-- `speed` - aktuální rychlost auta
+- `x` - current x position of the car in pixels
+- `y` - current y position of the car in pixels
+- `speed` - current car speed
 
-Agent tato data může použít pro rozhodování nebo skórování. Pokud je nepotřebuje, může je jen uložit nebo ignorovat.
+The agent may use these values for decisions or scoring. If it does not need them, it can simply store or ignore them.
 
 ## calculate_score(distance, time, no)
 
-Volá se během jízdy po pohybu auta.
+Called during driving after the car moves.
 
 ```python
 def calculate_score(self, distance, time, no):
     self.score = distance
 ```
 
-Parametry:
+Parameters:
 
-- `distance` - celková ujetá vzdálenost auta v dlaždicích
-- `time` - čas běhu auta v sekundách
-- `no` - pomocná hodnota enginu, studenti ji nemusí používat
+- `distance` - total distance traveled by the car in tiles
+- `time` - car runtime in seconds
+- `no` - helper engine value; students usually do not need it
 
-Tato metoda má aktualizovat `self.score`. Trénink potom vybírá lepší agenty podle skóre.
+This method should update `self.score`. Training then selects better agents based on the score.
 
 ## getscore()
 
-Vrací aktuální skóre:
+Returns the current score:
 
 ```python
 def getscore(self):
     return self.score
 ```
 
-Engine používá skóre při řazení aut v tréninku.
+The engine uses the score when ranking cars in training.
 
 ## mutate()
 
-Volá se při vytváření nové generace.
+Called when creating a new generation.
 
 ```python
 def mutate(self):
@@ -167,13 +167,13 @@ def mutate(self):
     self.store()
 ```
 
-Metoda má náhodně změnit parametry agenta. Po změně parametrů je doporučené zavolat `self.store()`, aby se aktuální stav dal uložit do `.npz`.
+The method should randomly change the agent parameters. After changing parameters, it is recommended to call `self.store()` so the current state can be saved into `.npz`.
 
-Mutace nemá měnit rozhraní agenta. Agent musí po mutaci pořád umět `decide`, `get_parameters` a `set_parameters`.
+Mutation must not change the agent interface. After mutation, the agent must still support `decide`, `get_parameters`, and `set_parameters`.
 
 ## store()
 
-Připraví parametry pro uložení:
+Prepares parameters for saving:
 
 ```python
 def store(self):
@@ -184,28 +184,28 @@ def store(self):
     }
 ```
 
-Do `parameters` ukládejte jen hodnoty, které umí `numpy.savez` uložit do `.npz`: čísla, řetězce, numpy pole nebo jednoduché kombinace těchto hodnot.
+Store only values that `numpy.savez` can save into `.npz`: numbers, strings, numpy arrays, or simple combinations of these values.
 
 ## get_parameters()
 
-Vrací parametry pro `SAVE`:
+Returns parameters for `SAVE`:
 
 ```python
 def get_parameters(self):
     return self.parameters
 ```
 
-Trénink při ukládání zavolá:
+During saving, training calls:
 
 ```python
 np.savez(save_path, **brain.get_parameters())
 ```
 
-Proto musí `get_parameters()` vracet slovník.
+Therefore `get_parameters()` must return a dictionary.
 
 ## set_parameters(parameters)
 
-Obnoví agenta ze savu:
+Restores an agent from a save:
 
 ```python
 def set_parameters(self, parameters):
@@ -215,30 +215,30 @@ def set_parameters(self, parameters):
     self.store()
 ```
 
-`parameters` může být:
+`parameters` can be:
 
-- `numpy.lib.npyio.NpzFile` z `np.load(...)`
-- slovník parametrů z jiného agenta
+- `numpy.lib.npyio.NpzFile` from `np.load(...)`
+- a parameter dictionary from another agent
 
-Metoda musí nastavit interní stav tak, aby další volání `decide` fungovalo. Pokud save neodpovídá architektuře agenta, metoda může vyhodit chybu; engine ji zachytí a vypíše hlášku.
+The method must set the internal state so the next `decide` call works. If the save does not match the agent architecture, the method may raise an error; the engine catches it and prints a message.
 
-## Save soubor
+## Save file
 
-Savy patří do:
+Saves belong in:
 
 ```text
 students/saves/
 ```
 
-Doporučený název:
+Recommended name:
 
 ```text
-AIbrain_MujTeam.npz
+AIbrain_MyTeam.npz
 ```
 
-Save musí odpovídat architektuře agenta. Parametry uložené z jednoho typu agenta nemusí jít načíst do jiného typu agenta.
+A save must match the agent architecture. Parameters saved from one type of agent may not load into another type of agent.
 
-## Minimální kostra agenta
+## Minimal agent skeleton
 
 ```python
 from __future__ import annotations
@@ -247,9 +247,9 @@ import copy
 import numpy as np
 
 
-class AIbrain_MujTeam:
+class AIbrain_MyTeam:
     def __init__(self) -> None:
-        self.NAME = "MujTeam"
+        self.NAME = "MyTeam"
         self.score = 0.0
         self.W = np.zeros((4, 9))
         self.b = np.zeros(4)
@@ -293,38 +293,38 @@ class AIbrain_MujTeam:
         return self.score
 ```
 
-## Co engine garantuje
+## What the engine guarantees
 
-Engine garantuje:
+The engine guarantees:
 
-- agent je vytvořen bez argumentů
-- při jízdě se volá `passcardata`, potom `decide`, potom `calculate_score`
-- při ukládání se volá `get_parameters`
-- při načítání se volá `set_parameters`
-- při nové generaci se používá kopie parametrů a `mutate`
-- agenti ze `students/agents/` mají přednost před vestavěnými agenty
+- the agent is created without arguments
+- during driving, it calls `passcardata`, then `decide`, then `calculate_score`
+- during saving, it calls `get_parameters`
+- during loading, it calls `set_parameters`
+- when creating a new generation, it uses a copy of parameters and `mutate`
+- agents from `students/agents/` have priority over built-in agents
 
-## Na co se nespoléhat
+## What not to rely on
 
-Student by se neměl spoléhat na interní detaily enginu:
+A student should not rely on internal engine details:
 
-- přesnou implementaci `Car_manager`
-- přesné pořadí aut ve sprite groupech
-- absolutní cesty mimo `students/`
-- přímé importy interních scén
-- to, že `no` v `calculate_score` bude mít trvale stejný význam
+- the exact implementation of `Car_manager`
+- the exact ordering of cars in sprite groups
+- absolute paths outside `students/`
+- direct imports of internal scenes
+- `no` in `calculate_score` keeping the same meaning forever
 
-Stabilní část je rozhraní v tomto dokumentu.
+The stable part is the interface described in this document.
 
-## Vzor
+## Reference
 
-Nejlepší aktuální vzor je:
+The best current reference is:
 
 ```text
 AI_engines/AIbrain_linear.py
 ```
 
-Pro hlubší kontrolu rozhraní slouží:
+For deeper interface checks, use:
 
 ```text
 core/protocols.py
