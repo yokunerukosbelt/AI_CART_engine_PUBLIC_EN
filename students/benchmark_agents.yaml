@@ -1,0 +1,13 @@
+# Seznam agentu pro Benchmark.
+# Kazda polozka rika: kterou tridu agenta nacist a ktery .npz save ze students/saves pouzit.
+#
+# Format:
+# agents:
+#   - agent: AIbrain_MujTeam
+#     save: AIbrain_MujTeam.npz
+
+agents:
+  - agent: AIbrain_linear
+    save: lin_params.npz
+  - agent: AIbrain_linear
+    save: lin_params2.npz
