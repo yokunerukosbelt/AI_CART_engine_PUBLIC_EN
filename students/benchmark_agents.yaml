@@ -11,3 +11,5 @@ agents:
     save: lin_params.npz
   - agent: AIbrain_linear
     save: lin_params2.npz
+  - agent: hiyori_brain
+    save: hiyori_params.npz
