@@ -1,0 +1,2 @@
+run_id,timestamp,agent_name,map_name,mode,generation,completed_generations,generations_total,best_score,avg_score,median_score,crashed_count,cars_total,cars_active,best_score_all,stagnation_epochs,time_s,max_time_s,save_as,load_from
+20260713_020607_822019_hiyori_brain_small_dent_neru1,2026-07-13T02:06:22,hiyori_brain,students\maps\small_dent.csv,load,0,1,20,-53143.471776,-79590.860606,-71666.725358,100,100,0,-53143.471776,0,15.015,15.0,neru1.npz,neru2.npz

@@ -1,0 +1,4 @@
+run_id,timestamp,agent_name,map_name,mode,generation,completed_generations,generations_total,best_score,avg_score,median_score,crashed_count,cars_total,cars_active,best_score_all,stagnation_epochs,time_s,max_time_s,save_as,load_from
+20260713_034610_317197_hiyori_brain_01_wide_rectangle_yoshi3,2026-07-13T03:46:17,hiyori_brain,students\maps\01_wide_rectangle.csv,load,0,1,20,-2608.034505,-32920.059756,-30231.209445,99,100,1,-2608.034505,0,6.872,15.0,yoshi3.npz,yoshi2.npz
+20260713_034610_317197_hiyori_brain_01_wide_rectangle_yoshi3,2026-07-13T03:46:23,hiyori_brain,students\maps\01_wide_rectangle.csv,load,1,2,20,-3540.761356,-52467.218295,-56529.225099,99,100,1,-2608.034505,1,6.629,15.0,yoshi3.npz,yoshi2.npz
+20260713_034610_317197_hiyori_brain_01_wide_rectangle_yoshi3,2026-07-13T03:46:30,hiyori_brain,students\maps\01_wide_rectangle.csv,load,2,3,20,-3680.652442,-55937.897638,-60177.24339,99,100,1,-2608.034505,2,7.33,15.0,yoshi3.npz,yoshi2.npz

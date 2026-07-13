@@ -1,0 +1,2 @@
+run_id,timestamp,agent_name,map_name,mode,generation,completed_generations,generations_total,best_score,avg_score,median_score,crashed_count,cars_total,cars_active,best_score_all,stagnation_epochs,time_s,max_time_s,save_as,load_from
+20260713_031700_634677_hiyori_brain_small_dent_run10,2026-07-13T03:17:10,hiyori_brain,students\maps\small_dent.csv,load,0,1,20,-28141.930477,-68457.299853,-60872.373015,100,100,0,-28141.930477,0,10.328,15.0,run10.npz,run9.npz

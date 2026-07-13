@@ -1,0 +1,4 @@
+run_id,timestamp,agent_name,map_name,mode,generation,completed_generations,generations_total,best_score,avg_score,median_score,crashed_count,cars_total,cars_active,best_score_all,stagnation_epochs,time_s,max_time_s,save_as,load_from
+20260712_232035_473310_hiyori_brain_small_donut_neru,2026-07-12T23:20:45,hiyori_brain,students\maps\small_donut.csv,load,0,1,20,10048.326755,4563.647043,4206.365584,100,100,0,10048.326755,0,10.021,10.0,neru.npz,neru.npz
+20260712_232035_473310_hiyori_brain_small_donut_neru,2026-07-12T23:20:55,hiyori_brain,students\maps\small_donut.csv,load,1,2,20,10026.273266,5680.754002,5705.241882,100,100,0,10048.326755,1,10.005,10.0,neru.npz,neru.npz
+20260712_232035_473310_hiyori_brain_small_donut_neru,2026-07-12T23:21:05,hiyori_brain,students\maps\small_donut.csv,load,2,3,20,10203.940322,5200.64015,5517.314842,100,100,0,10203.940322,0,10.019,10.0,neru.npz,neru.npz

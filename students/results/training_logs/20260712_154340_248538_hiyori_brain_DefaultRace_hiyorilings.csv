@@ -1,0 +1,2 @@
+run_id,timestamp,agent_name,map_name,mode,generation,completed_generations,generations_total,best_score,avg_score,median_score,crashed_count,cars_total,cars_active,best_score_all,stagnation_epochs,time_s,max_time_s,save_as,load_from
+20260712_154340_248538_hiyori_brain_DefaultRace_hiyorilings,2026-07-12T15:43:51,hiyori_brain,DefaultSettings\DefaultRace.csv,start,0,1,10,100001.109996,100000.151214,100000.0,25,100,75,100001.109996,0,10.911,20.0,hiyorilings.npz,userbrain.npz
