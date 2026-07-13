@@ -31,6 +31,24 @@ MUTATION_TIERS = (
     (0.12, 0.240, 0.55, 0.12),  # major exploration
 )
 
+# The engine activates controls only when an output is greater than 0.5.
+# Throttle mutations are therefore moderated so useful children do not become
+# permanently stationary from a small change near that hard threshold.
+THROTTLE_MUTATION_SCALE = 0.45
+THROTTLE_BIAS_MUTATION_SCALE = 0.25
+MIN_MOVEMENT_THROTTLE = 0.53
+MAX_THROTTLE_REPAIR_STEPS = 20
+THROTTLE_REPAIR_STEP = 0.10
+
+# Representative legal sensor patterns used only after mutation to confirm
+# that the child can accelerate in at least one plausible driving situation.
+MOVEMENT_TEST_PATTERNS = (
+    (2, 4, 7, 10, 12, 10, 7, 4, 2),   # open corridor
+    (1, 2, 4, 7, 10, 9, 7, 5, 3),     # mild right opening
+    (3, 5, 7, 9, 10, 7, 4, 2, 1),     # mild left opening
+    (2, 3, 5, 6, 7, 6, 5, 3, 2),      # moderate clearance
+)
+
 
 
 class hiyori_brain:
@@ -142,12 +160,59 @@ class hiyori_brain:
 
         return outputs
 
+    def _raw_outputs(self, data: Sequence[float]) -> np.ndarray:
+        """Return network outputs without contradictory-action suppression."""
+        x = self._prepare_inputs(data)
+        hidden = np.tanh(self.W1 @ x + self.b1)
+        return self._sigmoid(self.W2 @ hidden + self.b2)
+
+    def _can_throttle(self) -> bool:
+        """Check whether this brain can accelerate in a plausible situation."""
+        old_speed = self.speed
+        try:
+            # Test at rest because that is where a newly spawned car begins.
+            self.speed = 0.0
+            return any(
+                float(self._raw_outputs(pattern)[0]) >= MIN_MOVEMENT_THROTTLE
+                for pattern in MOVEMENT_TEST_PATTERNS
+            )
+        finally:
+            self.speed = old_speed
+
+    def _repair_throttle_if_needed(self) -> None:
+        """Gently lift throttle bias only when mutation made motion impossible.
+
+        This does not force throttle in every situation. It only ensures that
+        the child can exceed the engine's 0.5 action threshold for at least
+        one representative open-road pattern.
+        """
+        for _ in range(MAX_THROTTLE_REPAIR_STEPS):
+            if self._can_throttle():
+                return
+            self.b2[0] = float(
+                np.clip(self.b2[0] + THROTTLE_REPAIR_STEP, -5.0, 5.0)
+            )
+
+        # Extremely unusual mutations can suppress throttle through the hidden
+        # representation even after repeated bias repair. In that case, restore
+        # a modest positive throttle bias and clear only the throttle output row.
+        # Steering, braking, and hidden features remain mutated.
+        if not self._can_throttle():
+            self.W2[0] *= 0.5
+            self.b2[0] = max(float(self.b2[0]), 0.85)
+
+        # One final deterministic lift guarantees at least one legal movement
+        # pattern without forcing throttle in every situation.
+        while not self._can_throttle() and self.b2[0] < 5.0:
+            self.b2[0] = min(5.0, float(self.b2[0]) + THROTTLE_REPAIR_STEP)
+
     def mutate(self) -> None:
         """Mutate a copied parent using a fixed mixture of strengths.
 
         The trainer gives every selected parent roughly the same number of
-        children. This mutation mixture therefore creates a predictable blend
-        of near-parent refinements and larger exploratory jumps each generation.
+        children. This mutation mixture creates both refinements and exploratory
+        jumps, while protecting the throttle pathway from mutations that would
+        otherwise produce large numbers of permanently stationary children.
         """
         draw = float(np.random.random())
         cumulative = 0.0
@@ -166,15 +231,34 @@ class hiyori_brain:
                 break
 
         changed = False
-        for parameter in (self.W1, self.b1, self.W2, self.b2):
+
+        # Hidden representation may mutate normally.
+        for parameter in (self.W1, self.b1):
             mask = np.random.random(parameter.shape) < probability
             if np.any(mask):
                 changed = True
             parameter += mask * np.random.normal(0.0, sigma, parameter.shape)
 
-        # Guarantee that every child differs from its parent.
+        # Steering and brake outputs mutate at full strength. The throttle row
+        # mutates more gently because small changes near 0.5 can immobilize a car.
+        output_noise = np.random.normal(0.0, sigma, self.W2.shape)
+        output_noise[0] *= THROTTLE_MUTATION_SCALE
+        output_mask = np.random.random(self.W2.shape) < probability
+        if np.any(output_mask):
+            changed = True
+        self.W2 += output_mask * output_noise
+
+        bias_noise = np.random.normal(0.0, sigma, self.b2.shape)
+        bias_noise[0] *= THROTTLE_BIAS_MUTATION_SCALE
+        bias_mask = np.random.random(self.b2.shape) < probability
+        if np.any(bias_mask):
+            changed = True
+        self.b2 += bias_mask * bias_noise
+
+        # Guarantee that every child differs from its parent, preferring a
+        # steering/brake parameter rather than the fragile throttle pathway.
         if not changed:
-            row = int(np.random.randint(0, N_ACTIONS))
+            row = int(np.random.randint(1, N_ACTIONS))
             col = int(np.random.randint(0, N_HIDDEN))
             self.W2[row, col] += float(np.random.normal(0.0, sigma))
 
@@ -184,11 +268,17 @@ class hiyori_brain:
             limit = np.sqrt(6.0 / (N_INPUTS + N_HIDDEN))
             self.W1[neuron] = np.random.uniform(-limit, limit, N_INPUTS)
             self.b1[neuron] = 0.0
-            self.W2[:, neuron] = np.random.normal(0.0, max(0.08, sigma), N_ACTIONS)
+            outgoing = np.random.normal(0.0, max(0.08, sigma), N_ACTIONS)
+            outgoing[0] *= THROTTLE_MUTATION_SCALE
+            self.W2[:, neuron] = outgoing
 
         # Prevent repeated large mutations from permanently saturating outputs.
         for parameter in (self.W1, self.b1, self.W2, self.b2):
             np.clip(parameter, -5.0, 5.0, out=parameter)
+
+        # Keep exploratory mutations, but prevent genetically dead children
+        # whose throttle never crosses the engine's action threshold.
+        self._repair_throttle_if_needed()
 
         tier_names = ("FINE", "NORMAL", "STRONG", "MAJOR")
         self.NAME += (
@@ -204,17 +294,14 @@ class hiyori_brain:
         self.store()
 
     def calculate_score(self, distance: float, time: float, no: int) -> None:
-        """Require a car to earn its way above an immediate-crash score.
+        """
+        Require a car to earn its way above an immediate-crash score.
 
         Every brain begins at ``BASE_FITNESS``. If a car crashes before the
         engine calls this method, its score therefore remains very low.
         Stationary cars become slightly worse over time, while any genuine
         distance earns a large positive reward. Pace breaks ties in favour of
         faster progress. ``no`` is ignored because its meaning is not stable.
-
-        This deliberately trusts the engine's distance value as-is. No
-        teleport/jump filtering is applied yet so that scoring changes can be
-        tested independently.
         """
         safe_distance = max(float(distance), 0.0)
         safe_time = max(float(time), 0.05)

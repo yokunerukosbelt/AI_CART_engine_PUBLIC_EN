@@ -1,0 +1,2 @@
+run_id,timestamp,agent_name,map_name,mode,generation,completed_generations,generations_total,best_score,avg_score,median_score,crashed_count,cars_total,cars_active,best_score_all,stagnation_epochs,time_s,max_time_s,save_as,load_from
+20260713_064411_561237_hiyori_brain_02_gentle_dent_yoshi8,2026-07-13T06:44:25,hiyori_brain,students\maps\02_gentle_dent.csv,load,0,1,100,-13780.457345,-63893.427712,-61909.260908,45,100,55,-13780.457345,0,13.757,30.0,yoshi8.npz,yoshi7.npz
